@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 40px auto; padding: 20px; border: 1px solid #ddd; background: #fff;">
+    <h2 style="margin-top: 0;">Create Account</h2>
+
+    <div id="error-msg" style="color: red; margin-bottom: 15px; display: none;"></div>
+
+    <form hx-post="/register" hx-target="#auth-response" hx-swap="none" hx-json-enc="custom">
+        <label>Email:</label><br>
+        <input type="email" name="email" style="width: 100%; padding: 5px; margin-bottom: 10px;" required><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" style="width: 100%; padding: 5px; margin-bottom: 10px;" required><br>
+
+        <button type="submit" style="padding: 5px 15px; cursor: pointer;">Sign Up</button>
+    </form>
+
+    <div id="auth-response"></div>
+
+    <script>
+        // Custom JSON encoding for register endpoint which expects JSON body, not form data
+        htmx.defineExtension('json-enc', {
+            onEvent: function (name, evt) {
+                if (name === "htmx:configRequest") {
+                    evt.detail.headers['Content-Type'] = "application/json";
+                }
+            },
+            encodeParameters: function (xhr, parameters, elt) {
+                xhr.overrideMimeType('text/json');
+                return JSON.stringify(parameters);
+            }
+        });
+
+        document.body.addEventListener('htmx:afterRequest', function (evt) {
+            if (evt.detail.path === "/register") {
+                if (evt.detail.xhr.status === 200) {
+                    alert("Account created! Please log in.");
+                    window.location.href = "/login-page";
+                } else {
+                    const errDiv = document.getElementById('error-msg');
+                    errDiv.innerText = "Error: Email may be taken.";
+                    errDiv.style.display = 'block';
+                }
+            }
+        });
+    </script>
+</div>
+{% endblock %}

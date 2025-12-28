@@ -1,0 +1,43 @@
+{% for paper in papers %}
+<div class="apaper" id="pid{{ paper.id }}">
+    <div class="paperdesc">
+        <span class="ts"><a href="{{ paper.links['abs'] }}" target="_blank">{{ paper.title }}</a></span><br>
+        <span class="as">
+            {% for author in paper.authors %}
+            {{ author }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </span><br>
+        <span class="ds">{{ paper.published.strftime('%b %d, %Y') }}</span>
+        <span class="cs">{{ paper.category }}</span>
+        <br>
+        <span class="tt">{{ paper.summary }}</span>
+    </div>
+    <div class="dllinks">
+        <span class="spid">{{ paper.arxiv_id }}</span>
+        <a href="{{ paper.links['pdf'] }}" target="_blank">pdf</a>
+        <a href="{{ paper.links['abs'] }}" target="_blank">arxiv</a>
+        <span class="sim" hx-get="/similar/{{ paper.id }}" hx-target="#rtable" hx-indicator="#loading"
+            style="cursor: pointer; color: #00f; text-decoration: underline;">similar</span>
+        <span class="sim" hx-post="/library/toggle/{{ paper.id }}" hx-swap="innerHTML"
+            style="cursor: pointer; color: green; text-decoration: underline; margin-left: 5px;"
+            onclick="if(!localStorage.getItem('token')) { window.location.href='/login-page'; return false; }">save</span>
+        <span style="cursor: pointer; color: #555; text-decoration: underline; margin-left: 5px;"
+            onclick="toggleBibtex('{{ paper.id }}')">bibtex</span>
+    </div>
+    <div id="ai_expl_{{ paper.id }}"></div>
+    <div id="bib_{{ paper.id }}"
+        style="display:none; background-color: #f0f0f0; padding: 10px; margin-top: 5px; font-family: monospace; font-size: 12px; white-space: pre-wrap;">
+        @article{arxiv_{{ paper.arxiv_id }},
+        title={ {{ paper.title }} },
+        author={ {{ " and ".join(paper.authors) }} },
+        journal={arXiv preprint {{ paper.arxiv_id }} },
+        year={ {{ paper.published.year }} }
+        }</div>
+</div>
+<div style="clear:both"></div>
+</div>
+{% else %}
+<div style="padding: 20px; text-align: center; color: #555;">
+    No papers found.
+</div>
+{% endfor %}

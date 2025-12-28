@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arxiv Sanity Modern</title>
+
+    <!-- Retro CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <!-- Custom JS -->
+    <script src="/static/js/main.js"></script>
+
+    <style>
+        /* Minimal layout overrides for HTMX compatibility */
+        #search-box {
+            margin-bottom: 20px;
+        }
+
+        .htmx-indicator {
+            display: none;
+        }
+
+        .htmx-request .htmx-indicator {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="titdiv">
+        <div id="tittxt">
+            <h1>Arxiv Sanity Modern</h1>
+        </div>
+    </div>
+
+    <div id="sbox">
+        <input type="text" id="qfield" name="q" placeholder="Filter papers locally (e.g. 'he')..." style="width: 50%;">
+        <div id="counter" style="display: inline-block; margin-left: 10px; color: #555;"></div>
+
+        <div style="margin-top: 5px; font-size: 12px; color: #888;">
+            <span style="margin-right: 14px;">Server Search:</span>
+            <input type="text" name="q_server" hx-get="/search" hx-trigger="keyup changed delay:1000ms"
+                hx-target="#rtable" hx-indicator="#loading" placeholder="Search full database..."
+                style="width: 300px; padding: 2px;">
+            <span id="loading" class="htmx-indicator"> Searching...</span>
+        </div>
+    </div>
+
+    <div id="pagebar">
+        <div class="pagelink" id="tabrecent"><a href="/">Recent</a></div>
+        <div class="pagelink"><a href="#" hx-get="/hype" hx-target="#rtable" hx-indicator="#loading">Top Hype</a></div>
+        <div class="pagelink" id="lib-link" style="display:none;"><a href="#" hx-get="/library" hx-target="#rtable"
+                hx-indicator="#loading">Library</a></div>
+        <div class="pagelink" id="rec-link" style="display:none;"><a href="#" hx-get="/recommend" hx-target="#rtable"
+                hx-indicator="#loading">Recommended</a></div>
+        <div class="pagelink" id="login-link"><a href="/login-page">Login</a></div>
+        <div class="pagelink" id="logout-link" style="display:none;"><a href="#" onclick="logout()">Logout</a></div>
+    </div>
+
+    <script>
+        // Simple Auth Logic
+        const token = localStorage.getItem('token');
+        if (token) {
+            document.getElementById('login-link').style.display = 'none';
+            document.getElementById('logout-link').style.display = 'inline-block';
+            document.getElementById('lib-link').style.display = 'inline-block';
+            // Enable recommended link
+            const rec = document.getElementById('rec-link');
+            if (rec) rec.style.display = 'inline-block';
+
+            // Allow HTMX to use the token
+            document.body.addEventListener('htmx:configRequest', function (evt) {
+                evt.detail.headers['Authorization'] = 'Bearer ' + token;
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.reload();
+        }
+    </script>
+
+    <div id="maindiv">
+        {% block content %}{% endblock %}
+    </div>
+
+    <br><br><br><br><br><br>
+</body>
+
+</html>

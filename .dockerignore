@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+.git
+.gitignore
+data/papers.json
+data/as.db
+venv
+.env
+.pytest_cache
+tests/__pycache__

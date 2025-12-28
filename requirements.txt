@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+httpx
+feedparser
+sentence-transformers
+numpy
+scikit-learn
+apscheduler
+pytz
+email-validator
+passlib[bcrypt]
+python-jose[cryptography]
+beautifulsoup4
+sqlalchemy
+
