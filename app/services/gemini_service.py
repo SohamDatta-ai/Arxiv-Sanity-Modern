@@ -5,7 +5,7 @@ import os
 logger = logging.getLogger(__name__)
 
 # Configure API Key (In prod, use env var. Here using hardcoded for demo as requested)
-GEMINI_API_KEY = "AIzaSyAOpc7SYwr0yf1VfmD8LjI8CqwK3qCiFiw"
+GEMINI_API_KEY = "enter your API key"
 genai.configure(api_key=GEMINI_API_KEY)
 
 class GeminiService:
