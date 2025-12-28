@@ -1,5 +1,8 @@
 # Arxiv Sanity Modern
 
+<img width="1919" height="1079" alt="Screenshot 2025-12-28 143048" src="https://github.com/user-attachments/assets/841aea82-90fd-43ee-b808-62b83d2362ad" />
+
+
 A local research assistant for managing and discovering Arxiv papers, inspired by the original Arxiv Sanity Preserver.
 
 ## Overview
